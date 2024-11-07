@@ -8,7 +8,7 @@ const bool_size = 1;
 
 (async () => {
     console.log('Enter the file path: ');
-    const string = "./computing_data0.computing";
+    const string = promter();
     const file_path = path.resolve(string);
     const data = fs.readFileSync(file_path);
     const buffer = Buffer.from(data);
