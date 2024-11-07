@@ -130,9 +130,10 @@ function loadStructureData(buffer:Buffer, counter:number, key:number){
                 counter += int_size;
                 const amount = buffer.readInt32LE(counter);
                 counter += int_size;
-                for(let j = 0; j < amount; j++){
-                    items.push(loadItem(item_key));
-                }
+                items.push({
+                    item: loadItem(item_key),
+                    amount: amount
+                });
             }
             return [{
                 items: items
