@@ -1,16 +1,52 @@
-import fs from 'fs'; 
-import path from 'path';
-import promt from 'prompt-sync';
+import express from 'express';
+import fileuploader from 'express-fileupload';
 
-const promter = promt();
+const app = express();
+
+app.use(fileuploader({
+    limits: { fileSize: 100 * 1024 }
+}));
+
 const int_size = 4;
 const bool_size = 1;
 
+app.get('/', (req, res) => {
+    res.json({message:"Service Online"});
+})
+
+app.post('/to_json', (req, res) => {
+    if(!req.files || !req.files.file){
+        res.status(400).json({message:"No file uploaded"});
+        return;
+    }
+    const file = req.files.file;
+    const data = (file as any).data;
+    const json = to_json(data);
+    res.json(json);
+});
+
+app.listen(3000, () => {
+    console.log('Server running on port 3000');
+});
+
+/*
 (async () => {
     console.log('Enter the file path: ');
     const string = promter();
     const file_path = path.resolve(string);
-    const data = fs.readFileSync(file_path);
+    const file_name = path.extname(file_path);
+    if(file_name == ".computing"){
+        const data = fs.readFileSync(file_path);
+        to_json(data);
+    }else if (file_name == ".json"){
+        const data = fs.readFileSync(file_path);
+        const json = JSON.parse(data.toString());
+        //to_computing(json);
+    }
+})();
+*/
+
+function to_json(data:Buffer){
     const buffer = Buffer.from(data);
 
     const save_system = {
@@ -42,9 +78,8 @@ const bool_size = 1;
     save_system.structures = structures_data;
     save_system.money = buffer.readInt32LE(counter);
     counter += int_size;
-    fs.writeFileSync('./output.json', JSON.stringify(save_system));
-
-})();
+    return save_system
+}
 
 function loadStructureData(buffer:Buffer, counter:number, key:number){
     switch(key){
