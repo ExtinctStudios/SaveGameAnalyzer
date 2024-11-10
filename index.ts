@@ -22,7 +22,7 @@ app.post('/to_json', (req, res) => {
     const file = req.files.file;
     const data = (file as any).data;
     const json = to_json(data);
-    res.json(json);
+    res.setHeader('Access-Control-Allow-Origin', '*').json(json);
 });
 
 app.listen(3000, () => {
