@@ -29,32 +29,27 @@ app.listen(3000, () => {
     console.log('Server running on port 3000');
 });
 
-/*
-(async () => {
-    console.log('Enter the file path: ');
-    const string = promter();
-    const file_path = path.resolve(string);
-    const file_name = path.extname(file_path);
-    if(file_name == ".computing"){
-        const data = fs.readFileSync(file_path);
-        to_json(data);
-    }else if (file_name == ".json"){
-        const data = fs.readFileSync(file_path);
-        const json = JSON.parse(data.toString());
-        //to_computing(json);
-    }
-})();
-*/
+function to_buffer(data:any){
+    const buffer = Buffer.alloc(0);
+
+}
 
 function to_json(data:Buffer){
     const buffer = Buffer.from(data);
 
     const save_system = {
+        version: "",
         structures : [],
         money: 0
     }
 
     let counter = 0;
+
+    const string_size = buffer.readInt32LE(counter);
+    counter += int_size;
+    save_system.version = buffer.toString('utf-8', counter, counter + string_size);
+    counter += string_size;
+
     const grid_count = buffer.readInt32LE(counter);
     counter += int_size;
     const structures_data = [];
@@ -83,7 +78,7 @@ function to_json(data:Buffer){
 
 function loadStructureData(buffer:Buffer, counter:number, key:number){
     switch(key){
-        case 41231234: { // Input
+        case 2149596416: { // Input
             const items = [];
             const item_count = buffer.readInt32LE(counter);
             counter += int_size;
@@ -96,10 +91,10 @@ function loadStructureData(buffer:Buffer, counter:number, key:number){
                 items: items
             }, counter];
         }
-        case 128223386: { // Output
+        case 2015576320: { // Output
             return [{},counter];
         }
-        case 1485802268:{ //converyor
+        case 2937512960:{ //converyor
             const has_item = Boolean(buffer.readInt8(counter));
             counter += bool_size;
             let item_key;
@@ -114,7 +109,7 @@ function loadStructureData(buffer:Buffer, counter:number, key:number){
                 item: item
             }, counter];
         }
-        case 556367699: { //Limitor
+        case 1278581504: { //Limitor
             const has_item = Boolean(buffer.readInt8(counter));
             counter += bool_size;
             let item_key;
@@ -129,7 +124,7 @@ function loadStructureData(buffer:Buffer, counter:number, key:number){
                 item: item
             }, counter];
         }
-        case 1546486843: { //Splitter
+        case 1745748736: { //Splitter
             const has_item = Boolean(buffer.readInt8(counter));
             counter += bool_size;
             const has_split = Boolean(buffer.readInt8(counter));
@@ -147,16 +142,19 @@ function loadStructureData(buffer:Buffer, counter:number, key:number){
                 has_split: has_split
             }, counter];
         }
-        case 2146318204: { // cleaner
+        case 1822377728: { // cleaner
             return [{}, counter];
         }
-        case 1537064138: { //pellet maker
+        case 3129588736: { //pellet maker
             return [{}, counter];
         }
-        case 832871175: { // circuit maker
+        case 786966016: { // circuit maker
             return [{}, counter];
         }
-        case 26791252: { // storage
+        case 831678976: { // circuit maker
+            return [{}, counter];
+        }
+        case 2676854528: { // storage
             const item_count = buffer.readInt32LE(counter);
             counter += int_size;
             const items = [];
