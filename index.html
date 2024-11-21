@@ -8,13 +8,13 @@
         <input type="file" id="computing" name="file" accept=".computing" />
         <pre id="json"></pre>
         <script>
-            const link = "http://localhost:3000/to_json";
+            const link = "https://computing.lukasabbe.com/to_json";
             var input = document.querySelector('input');
             input.addEventListener('change', function() {
                 var file = input.files[0];
                 var data = new FormData();
                 data.append('file', file);
-                fetch('http://localhost:3000/to_json', {
+                fetch(link, {
                     method: 'POST',
                     body: data
                 }).then(response => response.json()).then(data => {
